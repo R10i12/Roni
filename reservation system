@@ -1,0 +1,99 @@
+/**reservation system**/
+#include <iostream>
+#include <string>
+#include <queue>
+
+using namespace std;
+
+struct Customer {
+    string firstName;
+    string lastName;
+};
+
+queue<Customer> customerQueue;
+void addCustomer() {
+    Customer newCustomer;
+    cout << "customers name: ";
+    cin >> newCustomer.firstName;
+    cout << "customers surname: ";
+    cin >> newCustomer.lastName;
+    customerQueue.push(newCustomer);
+    cout << "customer added successfully." << endl;
+}
+void cancelReservation() {
+    if (customerQueue.empty()) {
+        cout << "The queue is empty. No customers to cancel." << endl;
+    } else {
+        cout << "Enter the position of the customer to be canceled: ";
+        int position;
+        cin >> position;
+
+        if (position < 1 || position > customerQueue.size()) {
+            cout << "invalid position,please try again." << endl;
+        } else {
+            
+            queue<Customer> tempQueue;
+            while (position > 1) {
+                tempQueue.push(customerQueue.front());
+                customerQueue.pop();
+                position--;
+            }
+            customerQueue.pop();
+            while (!tempQueue.empty()) {
+                customerQueue.push(tempQueue.front());
+                tempQueue.pop();
+            }
+            cout << "The customer was canceled successfully." << endl;
+        }
+    }
+}   
+void showCustomerQueue() {
+    if (customerQueue.empty()) {
+        cout << "queue is empty." << endl;
+    } else {
+        cout << "customer queue:" << endl;
+        int position = 1;
+        queue<Customer> tempQueue = customerQueue;
+        while (!tempQueue.empty()) {
+            Customer customer = tempQueue.front();
+            cout << position << ". " << customer.firstName << " " << customer.lastName << endl;
+            tempQueue.pop();
+            position++;
+        }
+    }
+}
+void showMenu() {
+    cout << "Menü:" << endl;
+    cout << "1- show customer list" << endl;
+    cout << "2- save a customer" << endl;
+    cout << "3- cancel a reservation" << endl;
+    cout << "4- exit" << endl;
+}
+
+int main() {
+    int choice;
+    do {
+        showMenu();
+        cout << "ENter your choice: ";
+        cin >> choice;
+
+        switch(choice) {
+            case 1:
+                showCustomerQueue();
+                break;
+            case 2:
+                addCustomer();
+                break;
+            case 3:
+                cancelReservation();
+                break;
+            case 4:
+                cout << "exiting the program..." << endl;
+                break;
+            default:
+                cout << "invalid choice pls try again." << endl;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
